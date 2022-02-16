@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for film in films %}
+        <div class="col-3">
+            <div class="card" style="height:750px">
+                <img src="{{ film.image.url }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h4 class="card-title">{{ film.title }}</h4>
+                    <h5 class="card-title">Автор: <a href="{% url 'profile' pk=film.author.pk %}">{{ film.author }}</a>
+                    </h5>
+                    <p class="card-text">{{ film.description|truncatechars:150 }}</p>
+
+                    {% if user.is_superuser or film.author.pk == user.pk %}
+                    <div class="text-center">
+                        <a href="{{ film.get_absolute_url }}" class="btn btn-primary">Подробнее</a>
+                        <a href="{% url 'edit_film' pk=film.pk %}" class="btn btn-success">Изменить</a>
+                        <a href="{% url 'delete_film' pk=film.pk %}" class="btn btn-danger mt-3">Удалить</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h4 class="text-center mt-4">Список фильмов пуст.</h4>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
